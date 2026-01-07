@@ -14,7 +14,22 @@ async def inputForm(pagina, campo, dado):
 async def inputFormClick(pagina, campo):
     await pagina.locator(f'//label[normalize-space()="{campo}"]/preceding-sibling::input[1]').click()
     
+def handleCaractere(conta: str) -> dict:
+    if not conta:
+        return {"conta": "", "digito": ""}
 
+    conta = conta.strip()
+
+    if "-" in conta:
+        conta_formatada, digito = conta.split("-", 1)
+    else:
+        conta_formatada = conta[:-1]
+        digito = conta[-1]
+
+    return {
+        "conta": conta_formatada,
+        "digito": digito
+    }
 
 def clearNumber(numero: str) -> str:
     numero = numero.strip()
