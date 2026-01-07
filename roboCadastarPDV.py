@@ -13,7 +13,6 @@ async def inputForm(pagina, campo, dado):
 
 async def inputFormClick(pagina, campo):
     await pagina.locator(f'//label[normalize-space()="{campo}"]/preceding-sibling::input[1]').click()
-    #await pagina.fill(f"input[formcontrolname={campo}]", dado)
     
 
 
