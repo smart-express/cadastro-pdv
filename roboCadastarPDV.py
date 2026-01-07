@@ -1,7 +1,6 @@
 import pandas as pd
 import asyncio
 from playwright.async_api import async_playwright
-import re
 from datetime import datetime
 
 nomeArquivo = 'CADASTRARPDV.xlsx'
@@ -9,7 +8,6 @@ df = pd.read_excel(nomeArquivo, dtype=str)
 
 async def inputForm(pagina, campo, dado):
     await pagina.locator(f'//label[normalize-space()="{campo}"]/preceding-sibling::input[1]').fill(dado)
-    #await pagina.fill(f"input[formcontrolname={campo}]", dado)
 
 async def inputFormClick(pagina, campo):
     await pagina.locator(f'//label[normalize-space()="{campo}"]/preceding-sibling::input[1]').click()
@@ -34,9 +32,6 @@ def handleCaractere(conta: str) -> dict:
 def clearNumber(numero: str) -> str:
     numero = numero.strip()
     return numero.replace("+55", "", 1).strip()
-
-def clearCpf(doc: str) -> str:
-    return "".join(c for c in doc if c.isdigit())
 
 def limpar_cpf(cpf: str) -> str:
     return cpf.replace(".", "").replace("-", "").zfill(11)
@@ -159,14 +154,12 @@ async def main():
                 if pd.notna(row["Data de início na empresa"]):
                     await inputFormClick(pagina, 'Data de admissão')
                     await pagina.keyboard.type(handleData(row["Data de início na empresa"]))
-               # await inputForm(pagina, 'Data de admissão', handleData(row["Data de início na empresa"]))
                 
                 await pagina.get_by_role("link", name="Endereço").click()
                 
                 await inputFormClick(pagina, "CEP")
                 await pagina.keyboard.type(row["CEP"])
                 await asyncio.sleep(2)
-               # await inputForm(pagina, 'CEP', row["CEP"])
                 await inputForm(pagina, 'Logradouro', row["Logradouro"])
                 await pagina.locator('input[formcontrolname="Endereco.Numero"]').fill(row["Número do endereço:"])
                 await inputForm(pagina, 'Bairro', row["Bairro"])
